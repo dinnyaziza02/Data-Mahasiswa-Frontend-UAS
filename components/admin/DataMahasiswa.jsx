@@ -1,0 +1,68 @@
+import Link from "next/link";
+
+import axios from "axios";
+import { useState } from "react";
+import {useRouter} from "next/router"
+
+const DataMahasiswa = ({ data }) => {
+  const [message, setMessage] = useState(false);
+  const router = useRouter();
+
+  async function hapusMahasiswa(nim) {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/mahasiswa/${nim}`
+      )
+      if (response.data.message) {
+        setMessage(response.data.message);
+      }
+      alert(`Mahasiswa dengan NIM ${nim} telah terhapus`)
+    } catch (error) {
+      console.log({ message : error.message })
+    }
+
+    router.push("/admin/dataMahasiswa");
+  } 
+  return (
+    
+      <div className="container">
+        <h3>Data Mahasiswa</h3>
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>Angkatan</th>
+              <th>Prodi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((mhs, idx) => (
+              <tr key={idx}>
+                <td>{mhs.nim}</td>
+                <td>{mhs.nama}</td>
+                <td>{mhs.angkatan}</td>
+                <td>{mhs.prodi}</td>
+                <td>
+                  <div className="d-flex justify-content-between">
+                    <Link href={`/admin/updatemahasiswa?nim=${mhs.nim}
+                    &nama=${mhs.nama}&angkatan=${mhs.angkatan}&prodi=${mhs.prodi}`}>
+                      <a>Edit</a>
+                    </Link>
+                    <button className="btn btn-danger btn-sm"
+                    value={mhs.nim}
+                    onClick={(e) => hapusMahasiswa(e.target.value)}>
+                    Hapus                      
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    
+  );
+};
+
+export default DataMahasiswa;

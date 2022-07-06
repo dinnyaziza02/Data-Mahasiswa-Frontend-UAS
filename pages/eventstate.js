@@ -1,0 +1,15 @@
+import EventState from "../components/EventState";
+import Nav from "../components/user/Nav";
+const eventstate=()=>{
+    return(
+        <>
+        <Nav/>
+        <div className="container m-4">
+        <EventState/>
+        </div>
+    </>
+
+    )
+   
+}
+export default eventstate;
